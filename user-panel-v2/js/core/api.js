@@ -37,12 +37,30 @@ class ApiClient {
     static async request(endpoint, options = {}) {
         try {
             const url = API_CONFIG.baseUrl + endpoint;
+            console.log('API Request:', { url, options });
+
             const response = await fetch(url, {
                 ...API_CONFIG,
                 ...options
             });
 
-            const data = await response.json();
+            console.log('API Response Status:', response.status);
+            
+            let data;
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                const text = await response.text();
+                console.log('Non-JSON Response:', text);
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    throw new Error('Invalid JSON response: ' + text);
+                }
+            }
+
+            console.log('API Response Data:', data);
 
             if (!response.ok) {
                 throw new ApiError(
@@ -54,6 +72,12 @@ class ApiClient {
 
             return data;
         } catch (error) {
+            console.error('API Request Error:', {
+                endpoint,
+                error: error.message,
+                stack: error.stack
+            });
+            
             if (error instanceof ApiError) {
                 throw error;
             }
@@ -63,6 +87,8 @@ class ApiClient {
 
     // Auth Methods
     static async login(username, password) {
+        console.log('Login attempt for user:', username);
+        
         const formData = new FormData();
         formData.append('username', username);
         formData.append('password', password);

@@ -123,6 +123,21 @@
         .login-footer a:hover {
             text-decoration: underline;
         }
+
+        /* Error Message */
+        .error-message {
+            color: var(--color-danger);
+            background: rgba(239, 68, 68, 0.1);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+            font-size: 0.875rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -134,6 +149,9 @@
             </div>
             <p class="text-secondary">Hesabınıza giriş yapın</p>
         </div>
+
+        <!-- Error Message Container -->
+        <div id="errorMessage" class="error-message"></div>
 
         <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
@@ -158,6 +176,28 @@
     </div>
 
     <script>
+        // Show error message
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+        }
+
+        // Hide error message
+        function hideError() {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.classList.remove('show');
+        }
+
+        // Reset form state
+        function resetForm(loginBtn) {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = `
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Giriş Yap</span>
+            `;
+        }
+
         async function handleLogin(event) {
             event.preventDefault();
             
@@ -166,51 +206,68 @@
             const loginBtn = document.getElementById('loginBtn');
             
             try {
-                // Disable button
+                // Hide any previous error
+                hideError();
+
+                // Disable button and show loading state
                 loginBtn.disabled = true;
                 loginBtn.innerHTML = `
                     <i class="fas fa-spinner fa-spin"></i>
                     <span>Giriş yapılıyor...</span>
                 `;
                 
+                console.log('Attempting login for:', username);
                 const result = await ApiClient.login(username, password.value);
+                console.log('Login result:', result);
                 
                 if (result.success) {
                     Utils.showNotification('Giriş başarılı!', 'success');
                     // Redirect after a short delay
                     setTimeout(() => {
+                        console.log('Redirecting to dashboard...');
                         window.location.replace('./index.html');
                     }, 500);
                 } else {
-                    Utils.showNotification(result.message || 'Giriş başarısız!', 'error');
+                    showError(result.message || 'Giriş başarısız! Kullanıcı adı veya şifre hatalı.');
                     password.value = '';
-                    loginBtn.disabled = false;
-                    loginBtn.innerHTML = `
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>Giriş Yap</span>
-                    `;
+                    resetForm(loginBtn);
                 }
                 
             } catch (error) {
                 console.error('Login error:', error);
-                Utils.showNotification('Giriş yapılırken bir hata oluştu', 'error');
-                loginBtn.disabled = false;
-                loginBtn.innerHTML = `
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>Giriş Yap</span>
-                `;
+                
+                // Show detailed error message
+                let errorMessage = 'Giriş yapılırken bir hata oluştu. ';
+                if (error.status === 404) {
+                    errorMessage += 'API endpoint bulunamadı.';
+                } else if (error.status === 500) {
+                    errorMessage += 'Sunucu hatası.';
+                } else if (!navigator.onLine) {
+                    errorMessage += 'İnternet bağlantınızı kontrol edin.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                showError(errorMessage);
+                Utils.showNotification(errorMessage, 'error');
+                
+                resetForm(loginBtn);
             }
         }
 
         // Check if already logged in
         async function checkAuth() {
             try {
+                console.log('Checking authentication status...');
                 const result = await ApiClient.getUserProfile();
+                console.log('Auth check result:', result);
+                
                 if (result.success) {
+                    console.log('User is already logged in, redirecting...');
                     window.location.replace('./index.html');
                 }
             } catch (error) {
-                console.log('Not logged in');
+                console.log('Not logged in:', error);
             }
         }
 
