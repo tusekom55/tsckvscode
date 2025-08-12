@@ -1,0 +1,433 @@
+<div class="dashboard">
+    <div class="section-header">
+        <h2 class="section-title">Hoş Geldiniz</h2>
+        <p class="section-subtitle">Trading hesabınızın genel durumu</p>
+    </div>
+    
+    <!-- Quick Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-header">
+                <h3 class="stat-title">Toplam Bakiye</h3>
+                <i class="fas fa-wallet" style="color: var(--color-primary);"></i>
+            </div>
+            <div id="totalBalance" class="stat-value loading">
+                <div class="spinner"></div>
+                <span>Yükleniyor...</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-header">
+                <h3 class="stat-title">Günlük Kazanç</h3>
+                <i class="fas fa-chart-line" style="color: var(--color-primary);"></i>
+            </div>
+            <div id="dailyPnl" class="stat-value loading">
+                <div class="spinner"></div>
+                <span>Hesaplanıyor...</span>
+            </div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-header">
+                <h3 class="stat-title">Açık Pozisyonlar</h3>
+                <i class="fas fa-chart-pie" style="color: var(--color-primary);"></i>
+            </div>
+            <div id="openPositions" class="stat-value loading">
+                <div class="spinner"></div>
+                <span>Yükleniyor...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Grid -->
+    <div class="activity-grid">
+        <div class="activity-card">
+            <div class="card-header">
+                <h3 class="card-title">Son İşlemler</h3>
+            </div>
+            <div id="recentTrades" class="card-content loading">
+                <div class="spinner"></div>
+                <span>Yükleniyor...</span>
+            </div>
+        </div>
+        
+        <div class="activity-card">
+            <div class="card-header">
+                <h3 class="card-title">Piyasa Özeti</h3>
+            </div>
+            <div id="marketSummary" class="card-content loading">
+                <div class="spinner"></div>
+                <span>Yükleniyor...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-bolt" style="color: var(--color-primary);"></i>
+                Hızlı İşlemler
+            </h3>
+            <p class="card-subtitle">En sık kullanılan işlemlere hızlı erişim</p>
+        </div>
+        <div class="quick-actions-grid">
+            <button class="quick-action-btn" onclick="navigateToSection('markets')">
+                <div class="action-icon" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="action-text">
+                    <span>Coin Al</span>
+                    <small>Piyasalara git ve coin satın al</small>
+                </div>
+            </button>
+
+            <button class="quick-action-btn" onclick="navigateToSection('portfolio')">
+                <div class="action-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="action-text">
+                    <span>Portföy</span>
+                    <small>Varlıklarınızı görüntüleyin</small>
+                </div>
+            </button>
+
+            <button class="quick-action-btn" onclick="navigateToSection('deposit')">
+                <div class="action-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <div class="action-text">
+                    <span>Para Yatır</span>
+                    <small>Hesabınıza bakiye ekleyin</small>
+                </div>
+            </button>
+
+            <button class="quick-action-btn" onclick="navigateToSection('positions')">
+                <div class="action-icon" style="background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="action-text">
+                    <span>Pozisyonlar</span>
+                    <small>Kaldıraçlı işlemleriniz</small>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Dashboard Layout */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+/* Section Header */
+.section-header {
+    margin-bottom: var(--spacing-lg);
+}
+
+.section-title {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.section-subtitle {
+    color: var(--text-secondary);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.stat-card {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.stat-title {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Activity Grid */
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.activity-card {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.card-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.card-title {
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.card-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    margin-top: var(--spacing-xs);
+}
+
+/* Quick Actions */
+.quick-actions-card {
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.quick-action-btn {
+    background: var(--bg-lighter);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-align: left;
+}
+
+.quick-action-btn:hover {
+    transform: translateY(-2px);
+    background: var(--bg-light);
+    border-color: var(--border-color-hover);
+}
+
+.action-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.action-text {
+    flex: 1;
+}
+
+.action-text span {
+    display: block;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.action-text small {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+/* Loading State */
+.loading {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .stats-grid,
+    .activity-grid,
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card,
+    .activity-card {
+        padding: var(--spacing-md);
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+</style>
+
+<script>
+// Initialize dashboard
+async function initDashboard() {
+    try {
+        // Load user stats
+        await loadUserStats();
+        
+        // Load recent trades
+        await loadRecentTrades();
+        
+        // Load market summary
+        await loadMarketSummary();
+        
+    } catch (error) {
+        console.error('Dashboard initialization error:', error);
+        Utils.showNotification('Dashboard yüklenirken hata oluştu', 'error');
+    }
+}
+
+// Load user stats
+async function loadUserStats() {
+    try {
+        // Get user profile
+        const profileResult = await ApiClient.getUserProfile();
+        if (profileResult.success) {
+            // Update total balance
+            const balance = parseFloat(profileResult.user.balance || 0);
+            document.getElementById('totalBalance').innerHTML = Utils.formatCurrency(balance);
+            
+            // Get positions for PnL calculation
+            const positionsResult = await ApiClient.getPositions();
+            if (positionsResult.success) {
+                // Calculate daily PnL
+                const dailyPnL = calculateDailyPnL(positionsResult.positions);
+                const pnlElement = document.getElementById('dailyPnl');
+                pnlElement.innerHTML = `
+                    <span style="color: ${dailyPnL >= 0 ? 'var(--color-success)' : 'var(--color-danger)'}">
+                        ${dailyPnL >= 0 ? '+' : ''}${Utils.formatCurrency(dailyPnL)}
+                    </span>
+                    <small style="font-size: 1rem; color: var(--text-secondary);">
+                        (${Utils.formatPercentage(dailyPnL / balance * 100)})
+                    </small>
+                `;
+                
+                // Update open positions count
+                const openPositions = positionsResult.positions.length;
+                document.getElementById('openPositions').innerHTML = `
+                    <span>${openPositions}</span>
+                    <small style="font-size: 1rem; color: var(--text-secondary);">pozisyon</small>
+                `;
+            }
+        }
+    } catch (error) {
+        console.error('Error loading user stats:', error);
+        Utils.showNotification('İstatistikler yüklenemedi', 'error');
+    }
+}
+
+// Load recent trades
+async function loadRecentTrades() {
+    try {
+        const result = await ApiClient.getTransactionHistory(5);
+        if (result.success && result.data.transactions) {
+            const trades = result.data.transactions;
+            const container = document.getElementById('recentTrades');
+            
+            if (trades.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>Henüz işlem yapılmamış</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = trades.map(trade => `
+                <div class="trade-item">
+                    <div class="trade-info">
+                        <span class="trade-type ${trade.type}">${trade.description}</span>
+                        <span class="trade-date">${Utils.formatDate(trade.date)}</span>
+                    </div>
+                    <span class="trade-amount ${parseFloat(trade.amount) >= 0 ? 'positive' : 'negative'}">
+                        ${Utils.formatCurrency(trade.amount)}
+                    </span>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Error loading recent trades:', error);
+        document.getElementById('recentTrades').innerHTML = `
+            <div class="error-state">
+                <p>İşlemler yüklenemedi</p>
+            </div>
+        `;
+    }
+}
+
+// Load market summary
+async function loadMarketSummary() {
+    // This will be implemented when we create the markets component
+    document.getElementById('marketSummary').innerHTML = `
+        <div class="info-state">
+            <p>Piyasa özeti yakında eklenecek</p>
+        </div>
+    `;
+}
+
+// Calculate daily PnL
+function calculateDailyPnL(positions) {
+    return positions.reduce((total, position) => {
+        const unrealizedPnL = parseFloat(position.unrealized_pnl || 0);
+        return total + unrealizedPnL;
+    }, 0);
+}
+
+// Navigate to section
+function navigateToSection(section) {
+    const navLink = document.querySelector(`.nav-link[data-section="${section}"]`);
+    if (navLink) {
+        navLink.click();
+    }
+}
+
+// Initialize dashboard when loaded
+document.addEventListener('DOMContentLoaded', initDashboard);
+</script>

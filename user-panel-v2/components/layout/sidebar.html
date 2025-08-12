@@ -1,0 +1,170 @@
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <i class="fas fa-chart-line"></i>
+            <span>TradePro</span>
+        </div>
+    </div>
+    
+    <nav class="nav-menu">
+        <div class="nav-item">
+            <a href="#" class="nav-link active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link" data-section="portfolio">
+                <i class="fas fa-briefcase"></i>
+                <span>Portföyüm</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link" data-section="markets">
+                <i class="fas fa-coins"></i>
+                <span>Piyasalar</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link" data-section="trading">
+                <i class="fas fa-exchange-alt"></i>
+                <span>İşlem Yap</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link" data-section="positions">
+                <i class="fas fa-chart-line"></i>
+                <span>Pozisyonlar</span>
+                <span class="position-count" id="positionCount" style="display: none;">0</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link" data-section="deposit">
+                <i class="fas fa-plus-circle"></i>
+                <span>Para Yatır</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a href="#" class="nav-link" data-section="profile">
+                <i class="fas fa-user"></i>
+                <span>Profil</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Çıkış</span>
+        </button>
+    </div>
+</aside>
+
+<style>
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background-color: var(--bg-darker);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: var(--z-sidebar);
+}
+
+.sidebar-header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.nav-menu {
+    padding: var(--spacing-md);
+    flex: 1;
+}
+
+.nav-item {
+    margin-bottom: var(--spacing-sm);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+}
+
+.nav-link.active {
+    background-color: var(--color-primary);
+    color: var(--text-primary);
+}
+
+.nav-link i {
+    width: 20px;
+    text-align: center;
+}
+
+.position-count {
+    background-color: var(--color-danger);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    margin-left: auto;
+}
+
+.sidebar-footer {
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+}
+
+.logout-btn {
+    width: 100%;
+    padding: var(--spacing-md);
+    background-color: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    transition: all var(--transition-fast);
+}
+
+.logout-btn:hover {
+    background-color: var(--color-danger);
+    color: var(--text-primary);
+    border-color: var(--color-danger);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-normal);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+}
+</style>
