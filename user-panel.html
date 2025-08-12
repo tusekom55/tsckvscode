@@ -10,7 +10,7 @@
         <h1>TradePro User Panel</h1>
         <p>Yeni versiyon test aşamasında</p>
         <div style="margin-top: 20px;">
-            <a href="user-panel-v2/login.html" style="display: inline-block; padding: 10px 20px; background-color: #00d4aa; color: white; text-decoration: none; border-radius: 5px;">
+            <a href="#" onclick="checkAndRedirect(); return false;" style="display: inline-block; padding: 10px 20px; background-color: #00d4aa; color: white; text-decoration: none; border-radius: 5px;">
                 Yeni Versiyonu Test Et
             </a>
         </div>
@@ -47,6 +47,46 @@
                     alert('Panel yüklenirken hata oluştu');
                 });
         }
+
+        // Check auth and redirect
+        function checkAndRedirect() {
+            fetch('backend/public/profile.php', {
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // If logged in, go to new panel
+                    window.location.href = 'user-panel-v2/index.html';
+                } else {
+                    // If not logged in, go to login page
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(error => {
+                console.error('Auth check error:', error);
+                window.location.href = 'login.html';
+            });
+        }
+
+        // Check if already logged in
+        fetch('backend/public/profile.php', {
+            credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // If logged in, redirect to appropriate panel
+                if (window.location.href.includes('user-panel-v2')) {
+                    window.location.href = 'index.html';
+                } else {
+                    loadOriginalPanel();
+                }
+            }
+        })
+        .catch(error => {
+            console.log('Not logged in');
+        });
     </script>
 </body>
 </html>
