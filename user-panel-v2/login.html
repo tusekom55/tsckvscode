@@ -14,8 +14,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <!-- Core Scripts -->
-    <script src="js/core/api.js" defer></script>
-    <script src="js/core/utils.js" defer></script>
+    <script src="js/core/api.js"></script>
+    <script src="js/core/utils.js"></script>
 
     <style>
         body {
@@ -93,10 +93,19 @@
             cursor: pointer;
             transition: all var(--transition-fast);
             margin-top: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
         }
 
         .login-btn:hover {
             background: var(--color-secondary);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         .login-footer {
@@ -137,9 +146,9 @@
                 <input type="password" id="password" name="password" required>
             </div>
 
-            <button type="submit" class="login-btn">
+            <button type="submit" class="login-btn" id="loginBtn">
                 <i class="fas fa-sign-in-alt"></i>
-                Giriş Yap
+                <span>Giriş Yap</span>
             </button>
         </form>
 
@@ -154,33 +163,42 @@
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password');
+            const loginBtn = document.getElementById('loginBtn');
             
             try {
-                const formData = new FormData();
-                formData.append('username', username);
-                formData.append('password', password.value);
+                // Disable button
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = `
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Giriş yapılıyor...</span>
+                `;
                 
-                const response = await fetch('../backend/public/login.php', {
-                    method: 'POST',
-                    body: formData,
-                    credentials: 'include'
-                });
-                
-                const result = await response.json();
+                const result = await ApiClient.login(username, password.value);
                 
                 if (result.success) {
                     Utils.showNotification('Giriş başarılı!', 'success');
+                    // Redirect after a short delay
                     setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1000);
+                        window.location.replace('./index.html');
+                    }, 500);
                 } else {
                     Utils.showNotification(result.message || 'Giriş başarısız!', 'error');
                     password.value = '';
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = `
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Giriş Yap</span>
+                    `;
                 }
                 
             } catch (error) {
                 console.error('Login error:', error);
                 Utils.showNotification('Giriş yapılırken bir hata oluştu', 'error');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = `
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Giriş Yap</span>
+                `;
             }
         }
 
@@ -189,7 +207,7 @@
             try {
                 const result = await ApiClient.getUserProfile();
                 if (result.success) {
-                    window.location.href = 'index.html';
+                    window.location.replace('./index.html');
                 }
             } catch (error) {
                 console.log('Not logged in');

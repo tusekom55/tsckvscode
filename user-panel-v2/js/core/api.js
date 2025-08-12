@@ -1,6 +1,6 @@
 // API Base Configuration
 const API_CONFIG = {
-    baseUrl: 'backend',
+    baseUrl: window.location.pathname.includes('/user-panel-v2/') ? '../backend' : 'backend',
     credentials: 'include',
     headers: {
         'Content-Type': 'application/json'
@@ -11,7 +11,8 @@ const API_CONFIG = {
 const API_ENDPOINTS = {
     auth: {
         profile: '/public/profile.php',
-        logout: '/public/logout.php'
+        logout: '/public/logout.php',
+        login: '/public/login.php'
     },
     user: {
         trading: '/user/trading.php',
@@ -61,6 +62,18 @@ class ApiClient {
     }
 
     // Auth Methods
+    static async login(username, password) {
+        const formData = new FormData();
+        formData.append('username', username);
+        formData.append('password', password);
+
+        return await this.request(API_ENDPOINTS.auth.login, {
+            method: 'POST',
+            body: formData,
+            headers: {} // Let browser set content-type for FormData
+        });
+    }
+
     static async getUserProfile() {
         return await this.request(API_ENDPOINTS.auth.profile);
     }
